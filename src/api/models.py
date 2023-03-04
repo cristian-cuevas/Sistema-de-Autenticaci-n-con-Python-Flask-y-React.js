@@ -11,9 +11,26 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.email}>'
 
+    def __init__(self, email, password, is_active):
+        self.email = email
+        self.password = password
+        self.is_active = is_active
+
+    @classmethod
+    def new_registro_user(cls, email, password, is_active):
+        new_registro_user = cls(email, password, is_active)
+        db.session.add(new_registro_user)
+        try:
+            db.session.commit()
+            return new_registro_user
+        except Exception as error:
+            print(error)
+            return None
+
     def serialize(self):
         return {
             "id": self.id,
             "email": self.email,
+            "password": self.password,
             # do not serialize the password, its a security breach
         }
